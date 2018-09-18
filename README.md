@@ -1,2 +1,2 @@
 # iDiv
-Exercise on global LST derivation
+Exercise on deriving global, monthly LST (day and night).
