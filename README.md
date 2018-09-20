@@ -23,8 +23,32 @@ While my algorithm uses R, this language serves mainly as a wrapper for tasks su
 
 ### Selection of target tiles
 <p align="justify">
-Looking at the <a href="https://ladsweb.modaps.eosdis.nasa.gov/">LAADS DAAC</a> server, we can already see that tiles with no overlapping land masses were already excluded. However, there are still tiles that overlap with very small land masses (i.e. area smaller than the product's pixel resolution). To avoid the time consuming download of these tiles, I first retrived a shapefile with the world's administrative boundaries (acquired <a href="https://biogeo.ucdavis.edu/data/gadm3.6/gadm36_shp.zip">here</a>) and, for each polygon, estimated the percent pixel coverage for a 1200 x 1200m grid (i.e. final product grid resolution) using the `poly2sample()` function of the <a href="">fieldRS</a> package. This function identifies all the pixels that are covered by a polygon and, for each pixel, quantifies the percent overlap. Using this data, I filtered out all polygons where the minimum percent overlap was lesser than 100%. Then, I downloaded a shapefile with the MODIS tiles (acquired href="http://book.ecosens.org/wp-content/uploads/2016/06/modis_grid.zip">here</a>) and queried the final set of tiles. Considering the build-up of a LST global, monthly composites for 1 year, <b><u>this step avoided the download of 1.4 Tb</u></b> of data.
+Looking at the <a href="https://ladsweb.modaps.eosdis.nasa.gov/">LAADS DAAC</a> server, we can already see that tiles with no overlapping land masses were already excluded. However, there are still tiles that overlap with very small land masses (i.e. area smaller than the product's pixel resolution). To avoid the time consuming download of these tiles, I first retrived a shapefile with the world's administrative boundaries (acquired <a href="https://biogeo.ucdavis.edu/data/gadm3.6/gadm36_shp.zip">here</a>) and, for each polygon, estimated the percent pixel coverage for a 1200 x 1200m grid (i.e. final product grid resolution) using the `poly2sample()` function of the <a href="">fieldRS</a> package. This function identifies all the pixels that are covered by a polygon and, for each pixel, quantifies the percent overlap. 
 </p>
+
+
+```r
+require(fieldRS)
+
+# read auxiliary data
+cadm <- shapefile("country administrative boundaries")
+tile <- shapefile("MODIS tile shapefile")
+
+# filter polygons where no pixel is completely comtained
+cadm.points <- poly2sample(s.tmp, 1200)
+cadm <- intersect(cadm, cadm.points[cadm.points$cover == 100,])
+
+# list target tiles
+print(unique(cadm$tile))
+
+```
+
+<p align="justify">
+Using this data, I filtered out all polygons where the minimum percent overlap was lesser than 100%. Then, I downloaded a shapefile with the MODIS tiles (acquired href="http://book.ecosens.org/wp-content/uploads/2016/06/modis_grid.zip">here</a>) and queried the final set of tiles. Considering the build-up of a LST global, monthly composites for 1 year, <b><u>this step avoided the download of 1.4 Tb</u></b> of data.
+</p>
+
+
+
 
 </br>
 
