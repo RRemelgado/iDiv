@@ -1,15 +1,11 @@
 #' @title proLST
 #'
-#' @description Interface to download and process Land Surface Temperature (LST) data.
+#' @description Interface to download and process tile-wise Land Surface Temperature (LST) data.
 #' @param tiles \emph{character} vector specifying the target MODIS tile (e.g. "h01v01")
 #' @param dates a vector of class \emph{Date} containing the target download dates.
 #' @param data.path Output data path for downloaded data.
 #' @import grDevices sp rgdal ncdf4
-#' @importFrom XML htmlParse readHTMLTable xmlRoot
-#' @importFrom httr GET write_disk authenticate
-#' @importFrom RCurl getURL
-#' @importFrom gdalUtils gdal_translate
-#' @importFrom lubridate is.Date
+#' @importFrom raster calc stack
 #' @return One or multiple raster objects.
 #' @details {Downloads and pre-processes 
 #' \link[https://lpdaac.usgs.gov/dataset_discovery/modis/modis_products_table/mod11a2_v006]{MOD11A2} and 
@@ -21,6 +17,7 @@
 #' "collection" + "variable" + ".tif".}
 #' @export
 
+#-------------------------------------------------------------------------------------------------------------------------------#
 #-------------------------------------------------------------------------------------------------------------------------------#
 
 # land surface temperature
@@ -62,38 +59,49 @@ proLST <- function(tile, dates, data.path) {
 # 3. download and combine MODIS TERRA/AQUA
 #-------------------------------------------------------------------------------------------------------------------------------#
   
-  for (d in 1:length(ud)) {
+  tmp <- lapply(1:length(ud), function(d) {
     
     downloaded.files <- rbind(downloadLST(tile, ud[d], product="MOD11A2"), downloadLST(tile, ud[d], product="MYD11A2"))
-    i <- which(!is.null(downloaded.files$file)) # which files are available?
+    i <- which(!is.na(downloaded.files$file)) # which files are available?
     if (length(i) > 0) {
       
       downloaded.files <- downloaded.files[i,]
       
-      ofiles <- paste0(data.path, as.character(ud[d]), "_", tile, "_", product)
+      ofiles <- paste0(data.path, downloaded.files$date, "_", tile, "_", downloaded.files$product)
       
-      ofiles <- extractLST(downloaded.files$file, ofile, delete.original=TRUE)
+      ofiles <- extractLST(downloaded.files$file, ofiles, delete.original=TRUE)
       
       # combine files (if available for TERRA and AQUA)
       if (length(i) > 1) {
         
-        ofile <- paste0(data.path, as.character(ud[d]), "_", tile, "_combined_lst-day.tif")
-        agg <- calc(stack(ofiles[1:3]), mean, na.rm=TRUE, filename=of, datatype="INT2U", overwrite=TRUE)
+        ofile1 <- paste0(data.path, as.character(ud[d]), "_", tile, "_combined_lst-day.tif")
+        calc(stack(ofiles[c(1,3)]), mean, na.rm=TRUE, filename=ofile1, datatype="INT2U", overwrite=TRUE)
         
         rm(agg)
-        file.remove(ifile)
+        file.remove(ofiles[c(1,3)])
         
-        ofile <- paste0(data.path, as.character(ud[d]), "_", tile, "_combined_lst-night.tif")
-        agg <- calc(stack(ofiles[2:4]), mean, na.rm=TRUE, filename=of, datatype="INT2U", overwrite=TRUE)
+        ofile2 <- paste0(data.path, as.character(ud[d]), "_", tile, "_combined_lst-night.tif")
+        calc(stack(ofiles[c(2,4)]), mean, na.rm=TRUE, filename=ofile2, datatype="INT2U", overwrite=TRUE)
         
         rm(agg)
-        file.remove(ifile)
+        file.remove(ifile[c(2,4)])
+        
+        ofiles <- c(ofile1, ofile2)
         
       }
       
-      
-    }
+    } else {ofiles <- NULL}
     
-  }
+    return(data.frame(date=ud[d], file.day=ofiles[1], file.night=ofiles[2], stringsAsFactors=FALSE))
+    
+  })
+  
+#-------------------------------------------------------------------------------------------------------------------------------#
+# 4. return output as a data.frame specifying where the files are stored
+#-------------------------------------------------------------------------------------------------------------------------------#
+  
+  
+  return(do.call(rbind, tmp[[sapply(tmp, function(d) {!is.null(d)})]]))
+  
   
 }

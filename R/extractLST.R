@@ -1,14 +1,25 @@
+#' @title extractLST
+#'
+#' @description Interface to download and process tile-wise Land Surface Temperature (LST) data.
+#' @param tiles \emph{character} vector specifying the target MODIS tile (e.g. "h01v01")
+#' @param dates a vector of class \emph{Date} containing the target download dates.
+#' @param data.path Output data path for downloaded data.
+#' @import grDevices sp rgdal ncdf4
+#' @importFrom gdalUtils gdal_translate
+#' @importFrom raster raster writeRaster
+#' @return One or multiple raster objects.
+#' @details {Downloads and pre-processes 
+#' \link[https://lpdaac.usgs.gov/dataset_discovery/modis/modis_products_table/mod11a2_v006]{MOD11A2} and 
+#' \link[https://lpdaac.usgs.gov/dataset_discovery/modis/modis_products_table/myd11a2_v006]{MYD11A2} data 
+#' for user specified \emph{tiles}. The data is downloaded from the 
+#' \link[https://ladsweb.modaps.eosdis.nasa.gov/]{LAADS DAAC server}. for each tile, the function downloads 
+#' the hdf files for closest in time to the elements in \emph{dates} and, for each hdf file, extract day and night 
+#' LST, applies quality information to each band and stores them as separate files names as "Date" + "tile" + 
+#' "collection" + "variable" + ".tif".}
+#' @export
 
-
-
-
-
-
-
-
-
-
-
+#-------------------------------------------------------------------------------------------------------------------------------#
+#-------------------------------------------------------------------------------------------------------------------------------#
 
 extractLST <- function(ifile, ofile, delete.original=TRUE) {
   
@@ -31,13 +42,13 @@ extractLST <- function(ifile, ofile, delete.original=TRUE) {
 # 2. extract lst data (day and night)
 #------------------------------------------------------------------------------------------------------------------------------------------------#
   
-  ofiles <- vector("character", length(ifile)) # files to be written
+  ofiles <- list() # files to be written
   
   for (f in 1:length(ifile)) {
     
     # process day LST
     tmp1 <- tempfile(pattern="tmp1", tmpdir=tempdir(), fileext=".tif")
-    gdal_translate(ifile[f], tmp1, sd_index=1, ot="UInt32")
+    gdal_translate(ifile[f], tmp1, sd_index=1)
     r1 <- raster(tmp1)
     tmp2 <- tempfile(pattern="tmp2", tmpdir=tempdir(), fileext=".tif")
     gdal_translate(ifile[f], tmp2, sd_index=2, ot="UInt32")
@@ -54,11 +65,11 @@ extractLST <- function(ifile, ofile, delete.original=TRUE) {
     file.remove(tmp2)
     
     # process night LST
-    tmp1 <- tempfile(pattern="tmp1", tmpdir=tempdir(), fileext=".tif", ot="UInt32")
-    gdal_translate(ifile[f], tmp1, sd_index=5)
+    tmp1 <- tempfile(pattern="tmp1", tmpdir=tempdir(), fileext=".tif")
+    gdal_translate(ifile[f], tmp1, sd_index=5, ot="UInt32")
     r1 <- raster(tmp1)
-    tmp2 <- tempfile(pattern="tmp2", tmpdir=tempdir(), fileext=".tif", ot"UInt32")
-    gdal_translate(ifile[f], tmp2, sd_index=6)
+    tmp2 <- tempfile(pattern="tmp2", tmpdir=tempdir(), fileext=".tif")
+    gdal_translate(ifile[f], tmp2, sd_index=6, ot="UInt32")
     qc <- raster(tmp2)
     qc <- ((qc %% b[1])>=a[1])^2 + ((qc %% b[2])>=a[2])^2
     r1[qc>0] <- NA
@@ -71,10 +82,10 @@ extractLST <- function(ifile, ofile, delete.original=TRUE) {
     file.remove(tmp1)
     file.remove(tmp2)
     
-    if (delete.original(file.remove(ofile))
+    if (delete.original) {file.remove(ofile)}
     
   }
   
-  return(ofiles) # report on written files
+  return(unlist(ofiles)) # report on written files
   
 }

@@ -16,12 +16,16 @@ Finnally, a global mosaic is build for each month using all tiles.
 
 ### Programming language
 <p aligh="justify">
-While my algorithm uses R, this language serves mainly as a wrapper for tasks such as data download. When perfoming RAM demanding tasks such as e.g. gap-filling, the algorithm calls the Python provided through the the `reticulate` package and the GDAL bindings offered by the `gdalUtils` package delivering the data processing to the respective platforms.
+While my algorithm uses R, this language serves mainly as a wrapper for tasks such as data download. When perfoming RAM demanding tasks such as e.g. gap-filling, the algorithm calls the Python provided through the the `reticulate` package and the GDAL bindings offered by the `gdalUtils` package delivering the data processing to the respective platforms. The developed algorithm can be installed using devtools as shown below. Note that the use of `reticulate` requires a pre-instalation of <a href="https://www.anaconda.com/">Anaconda</a> and <a href="https://www.python.org/">Python</a> while `gdalUtils` requises a pre-instalation of <a href="https://www.gdal.org/">GDAL</a> and <a href="https://cran.r-project.org/web/packages/rgdal/index.html">rgdal</a>.
 </p>
+
+```r
+devtools::install_github("RRemelgado/iDivR")
+```
 
 </br>
 
-### Selection of target tiles
+### Selection of tiles to process
 <p align="justify">
 Looking at the <a href="https://ladsweb.modaps.eosdis.nasa.gov/">LAADS DAAC</a> server, we can already see that tiles with no overlapping land masses were already excluded. However, there are still tiles that overlap with very small land masses (i.e. area smaller than the product's pixel resolution). To avoid the time consuming download of these tiles, I first retrived a shapefile with the world's administrative boundaries (acquired <a href="https://biogeo.ucdavis.edu/data/gadm3.6/gadm36_shp.zip">here</a>) and, for each polygon, estimated the percent pixel coverage for a 1200 x 1200m grid (i.e. final product grid resolution) using the `poly2sample()` function of the <a href="">fieldRS</a> package. This function identifies all the pixels that are covered by a polygon and, for each pixel, quantifies the percent overlap. 
 </p>
@@ -44,7 +48,7 @@ tiles <- unique(cadm$tile)
 ```
 
 <p align="justify">
-Using this data, I filtered out all polygons where the minimum percent overlap was lesser than 100% (Fig. 2). Then, I downloaded a shapefile with the MODIS tiles (acquired <a href="http://book.ecosens.org/wp-content/uploads/2016/06/modis_grid.zip">here</a>) and queried the final set of tiles. Considering the build-up of a LST global, monthly composites for 1 year, <b><u>this step avoided the download of 1.4 Tb</u></b> of data.
+Using this data, I filtered out all polygons where the minimum percent overlap was lesser than 100% (Fig. 2). Then, I downloaded a shapefile with the MODIS tiles (acquired <a href="http://book.ecosens.org/wp-content/uploads/2016/06/modis_grid.zip">here</a>) and queried the final set of tiles. Considering the build-up of a LST global, monthly composites for 1 year, <b><u>this step avoided the download of 1.4 Tb</u></b> of redundant data. These tiles overlap with small islands, mostly within the Pacific and Indian Oceans, where the use of satellite data with a higher resolution (e.g. Landsat) would be more appropriate.
 </p>
 
 <figure>

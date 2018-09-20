@@ -8,17 +8,8 @@
 #' @importFrom XML htmlParse readHTMLTable xmlRoot
 #' @importFrom httr GET write_disk authenticate
 #' @importFrom RCurl getURL url.exists
-#' @importFrom gdalUtils gdal_translate
 #' @importFrom lubridate is.Date
-#' @return One or multiple raster objects.
-#' @details {Downloads and pre-processes 
-#' \link[https://lpdaac.usgs.gov/dataset_discovery/modis/modis_products_table/mod11a2_v006]{MOD11A2} and 
-#' \link[https://lpdaac.usgs.gov/dataset_discovery/modis/modis_products_table/myd11a2_v006]{MYD11A2} data 
-#' for user specified \emph{tiles}. The data is downloaded from the 
-#' \link[https://ladsweb.modaps.eosdis.nasa.gov/]{LAADS DAAC server}. for each tile, the function downloads 
-#' the hdf files for closest in time to the elements in \emph{dates} and, for each hdf file, extract day and night 
-#' LST, applies quality information to each band and stores them as separate files names as "Date" + "tile" + 
-#' "collection" + "variable" + ".tif".}
+#' @return A \emph{character} vector and hdf files.
 #' @export
 
 #------------------------------------------------------------------------------------------------------------------------------------------------#
@@ -51,26 +42,21 @@ downloadLST <- function(tile, date, product="") {
 #------------------------------------------------------------------------------------------------------------------------------------------------#
   
   server <- paste0("https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/6/", product, '/', ayr, '/', doa, '/') #  where is the file?
+  tbl <- as.character(readHTMLTable(xmlRoot(htmlParse(GET(url=server))), skip.rows=1)$V1) # list hdf's
+  tbl <- tbl[grep(tile, tbl)]
   
-  # does the server exist? if so, check for file and, if that exists, initiate download
-  if (url.exists(server)) {
-      
-    tbl <- as.character(readHTMLTable(xmlRoot(htmlParse(GET(url=server))), skip.rows=1)$V1) # list hdf's
-    ifile <- paste0(server, tbl[grep(tile, tbl)]) # target file
-    
-    if (url.exists(ifile)) {
-      
-      ofile <- tempfile(pattern=basename(ifile), tmpdir=tempdir(), fileext=".hdf") # output
-      GET(ifile, write_disk(ofile, overwrite=TRUE)) # download file
-      
-    } else{ofile <- NA}
-  } else{ofile <- NA}
+  if (length(tbl) > 0) {
+    ifile <- paste0(server, tbl) # target file
+    ofile <- tempfile(pattern=basename(ifile), tmpdir=tempdir(), fileext=".hdf") # output
+    dft <- tryCatch(GET(ifile, write_disk(ofile, overwrite=TRUE)), error=function(e) return(FALSE)) # download file
+    if (isFALSE(dft)) {ofile <- NA}
+  } else {ofile <- NA}
   
 #------------------------------------------------------------------------------------------------------------------------------------------------#
 # 3. return information on product date and path to downloaded file
 #------------------------------------------------------------------------------------------------------------------------------------------------#
   
-  return(data.frame(date=aqd, file=ofile, product=product))
+  return(data.frame(date=aqd, file=ofile, product=product, stringsAsFactors=FALSE))
   
 }
   
