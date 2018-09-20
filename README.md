@@ -7,13 +7,10 @@ This exercise aims to derive global, day/night, monthly LST based on 8-day TERRA
 Finnally, a global mosaic is build for each month using all tiles. 
 </p>
 
-
 <figure>
   <p align="center"><img src="https://github.com/RRemelgado/iDivR/blob/master/inst/extdata/diagram.jpg" width="600"></p>
   <p align="center"><small>Figure 1 - Algorithm work flow</small></p>
 </figure>
-
-
 
 </br>
 
