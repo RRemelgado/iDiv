@@ -44,11 +44,11 @@ tiles <- unique(cadm$tile)
 ```
 
 <p align="justify">
-Using this data, I filtered out all polygons where the minimum percent overlap was lesser than 100% (Fig. 2). Then, I downloaded a shapefile with the MODIS tiles (acquired href="http://book.ecosens.org/wp-content/uploads/2016/06/modis_grid.zip">here</a>) and queried the final set of tiles. Considering the build-up of a LST global, monthly composites for 1 year, <b><u>this step avoided the download of 1.4 Tb</u></b> of data.
+Using this data, I filtered out all polygons where the minimum percent overlap was lesser than 100% (Fig. 2). Then, I downloaded a shapefile with the MODIS tiles (acquired <a href="http://book.ecosens.org/wp-content/uploads/2016/06/modis_grid.zip">here</a>) and queried the final set of tiles. Considering the build-up of a LST global, monthly composites for 1 year, <b><u>this step avoided the download of 1.4 Tb</u></b> of data.
 </p>
 
 <figure>
-  <p align="center"><img src="https://github.com/RRemelgado/iDivR/blob/master/inst/extdata/admFilter.jpg" width="600"></p>
+  <p align="center"><img src="https://github.com/RRemelgado/iDivR/blob/master/inst/extdata/admFilter.png" width="600"></p>
   <p align="center"><small>Figure 1 - Algorithm work flow</small></p>
 </figure>
 
