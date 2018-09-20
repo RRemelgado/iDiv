@@ -8,8 +8,8 @@ Finnally, a global mosaic is build for each month using all tiles.
 </p>
 
 
-<p align="justify">
-<img src="https://github.com/RRemelgado/iDivR/blob/master/inst/extdata/diagram.jpg" width="900">
+<p align="center">
+<img src="https://github.com/RRemelgado/iDivR/blob/master/inst/extdata/diagram.jpg" width="600">
 <caption>Figure 1 - Algorithm work flow</caption>
 </p>
 
