@@ -48,7 +48,7 @@ Using this data, I filtered out all polygons where the minimum percent overlap w
 </p>
 
 <figure>
-  <p align="center"><img src="https://github.com/RRemelgado/iDivR/blob/master/inst/extdata/admFilter.png" width="600"></p>
+  <p align="center"><img src="https://github.com/RRemelgado/iDivR/blob/master/inst/extdata/admFilter.png" width="800"></p>
   <p align="center"><small>Figure 1 - Algorithm work flow</small></p>
 </figure>
 
