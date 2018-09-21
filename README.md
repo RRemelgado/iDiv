@@ -85,7 +85,7 @@ Using this data, I filtered out all polygons where the minimum percent overlap w
 </figure>
 
 <figure>
-  <p align="center"><img src="https://github.com/RRemelgado/iDivR/blob/master/inst/extdata/modisTiles.jpeg" width="800"></p>
+  <p align="center"><img src="https://github.com/RRemelgado/iDivR/blob/master/inst/extdata/modisTiles.jpg" width="800"></p>
   <p align="center"><small>Figure 3 - Comparison of taken MODIS tiles (in yellow) against the ones excluded (in red)</small></p>
 </figure>
 
