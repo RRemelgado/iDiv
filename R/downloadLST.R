@@ -30,7 +30,7 @@ downloadLST <- function(tile, date, product="") {
   # check and formt temporal information
   if (!is.Date(date)) {stop('"date" is not a valid object')}
   ayr <- as.character(year(date))
-  doa <- sprintf("%03d", as.numeric(date-as.Date("2012-01-01")+1))
+  doa <- sprintf("%03d", as.numeric(date-as.Date(paste0(ayr, "-01-01"))+1))
   aqd <- as.character(date)
   
   # check product
@@ -48,8 +48,8 @@ downloadLST <- function(tile, date, product="") {
   if (length(tbl) > 0) {
     ifile <- paste0(server, tbl) # target file
     ofile <- tempfile(pattern=basename(ifile), tmpdir=tempdir(), fileext=".hdf") # output
-    dft <- tryCatch(GET(ifile, write_disk(ofile, overwrite=TRUE)), error=function(e) return(FALSE)) # download file
-    if (isFALSE(dft)) {ofile <- NA}
+    dft <- GET(ifile, write_disk(ofile, overwrite=TRUE)) # download file
+    if (dft$status_code != 200) {ofile <- NA}
   } else {ofile <- NA}
   
 #------------------------------------------------------------------------------------------------------------------------------------------------#

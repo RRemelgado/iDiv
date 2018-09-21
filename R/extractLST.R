@@ -42,50 +42,58 @@ extractLST <- function(ifile, ofile, delete.original=TRUE) {
 # 2. extract lst data (day and night)
 #------------------------------------------------------------------------------------------------------------------------------------------------#
   
-  ofiles <- list() # files to be written
+  ofiles1 <- vector("character", length(ifile)) # files to be written (day)
+  ofiles2 <- vector("character", length(ifile)) # files to be written (night)
   
   for (f in 1:length(ifile)) {
     
     # process day LST
-    tmp1 <- tempfile(pattern="tmp1", tmpdir=tempdir(), fileext=".tif")
-    gdal_translate(ifile[f], tmp1, sd_index=1)
-    r1 <- raster(tmp1)
-    tmp2 <- tempfile(pattern="tmp2", tmpdir=tempdir(), fileext=".tif")
-    gdal_translate(ifile[f], tmp2, sd_index=2, ot="UInt32")
-    qc <- raster(tmp2)
-    qc <- ((qc %% b[1])>=a[1])^2 + ((qc %% b[2])>=a[2])^2
-    r1[qc>0] <- NA
-    of <- paste0(ofile[f], '_day-lst.tif')
-    writeRaster(r1, of, dataType="UInt32", overwrite=TRUE) # day lst (1)
+    tmp1 <- tempfile(pattern=paste0(basename(ifile[f]), "_1"), tmpdir=tempdir(), fileext=".tif")
     
-    ofiles[length(ofiles)+1] <- of
+    gt <- tryCatch(gdal_translate(ifile[f], tmp1, sd_index=1), error = function(e) return(FALSE))
     
-    rm(qc)
-    file.remove(tmp1)
-    file.remove(tmp2)
+    if (!isFALSE(gt)) {
+      
+      r1 <- raster(tmp1)
+      tmp2 <- tempfile(pattern=paste0(basename(ifile[f]), "_2"), tmpdir=tempdir(), fileext=".tif")
+      gdal_translate(ifile[f], tmp2, sd_index=2, ot="UInt32")
+      qc <- raster(tmp2)
+      qc <- ((qc %% b[1])>=a[1])^2 + ((qc %% b[2])>=a[2])^2
+      r1[qc>0] <- NA
+      ofiles1[f] <- paste0(ofile[f], '_day-lst.tif')
+      writeRaster(r1, ofiles1[f], dataType="UInt32", overwrite=TRUE) # day lst (1)
+      
+      rm(qc, r1)
+      file.remove(tmp1)
+      file.remove(tmp2)
+      
+      # process night LST
+      tmp1 <- tempfile(pattern=paste0(basename(ifile[f]), "_1"), tmpdir=tempdir(), fileext=".tif")
+      gdal_translate(ifile[f], tmp1, sd_index=5, ot="UInt32")
+      r1 <- raster(tmp1)
+      tmp2 <- tempfile(pattern=paste0(basename(ifile[f]), "_2"), tmpdir=tempdir(), fileext=".tif")
+      gdal_translate(ifile[f], tmp2, sd_index=6, ot="UInt32")
+      qc <- raster(tmp2)
+      qc <- ((qc %% b[1])>=a[1])^2 + ((qc %% b[2])>=a[2])^2
+      r1[qc>0] <- NA
+      ofiles2[f] <- paste0(ofile[f], '_night-lst.tif')
+      writeRaster(r1, ofiles2[f], dataType="UInt32", overwrite=TRUE) # day lst (1)
+      
+      rm(qc, r1)
+      file.remove(tmp1)
+      file.remove(tmp2)
+      
+    } else {
+      
+      ofiles1[f] <- NA
+      ofiles2[f] <- NA
     
-    # process night LST
-    tmp1 <- tempfile(pattern="tmp1", tmpdir=tempdir(), fileext=".tif")
-    gdal_translate(ifile[f], tmp1, sd_index=5, ot="UInt32")
-    r1 <- raster(tmp1)
-    tmp2 <- tempfile(pattern="tmp2", tmpdir=tempdir(), fileext=".tif")
-    gdal_translate(ifile[f], tmp2, sd_index=6, ot="UInt32")
-    qc <- raster(tmp2)
-    qc <- ((qc %% b[1])>=a[1])^2 + ((qc %% b[2])>=a[2])^2
-    r1[qc>0] <- NA
-    of <- paste0(ofile[f], '_night-lst.tif')
-    writeRaster(r1, of, dataType="UInt32", overwrite=TRUE) # day lst (1)
+    }
     
-    ofiles[length(ofiles)+1] <- of
-    
-    rm(qc)
-    file.remove(tmp1)
-    file.remove(tmp2)
-    
-    if (delete.original) {file.remove(ofile)}
+    if (delete.original) {file.remove(ifile[f])}
     
   }
   
-  return(unlist(ofiles)) # report on written files
+  return(data.frame(day=ofiles1, night=ofiles2, stringsAsFactors=FALSE)) # report on written files
   
 }

@@ -4,7 +4,7 @@ This exercise aims to derive global, day/night, monthly LST based on 8-day TERRA
 <item>Downloads TERRA and AQUA data from the <a href="https://ladsweb.modaps.eosdis.nasa.gov/">LAADS DAAC</a> server</item>
 <item>Combines TERRA and AQUA data on a daily basis</item>
 <item>Interpolates data gaps and derives mean LST</item>
-Finnally, a global mosaic is build for each month using all tiles. 
+Finnally, a global mosaic is build for each month using all tiles. As an example, I derived monthly mean composites for the year of 2017 for continental Europe. This data can be accessed <a href="">here</a>.
 </p>
 
 <figure>
@@ -16,12 +16,40 @@ Finnally, a global mosaic is build for each month using all tiles.
 
 ### Programming language
 <p aligh="justify">
-While my algorithm uses R, this language serves mainly as a wrapper for tasks such as data download. When perfoming RAM demanding tasks such as e.g. gap-filling, the algorithm calls the Python provided through the the `reticulate` package and the GDAL bindings offered by the `gdalUtils` package delivering the data processing to the respective platforms. The developed algorithm can be installed using devtools as shown below. Note that the use of `reticulate` requires a pre-instalation of <a href="https://www.anaconda.com/">Anaconda</a> and <a href="https://www.python.org/">Python</a> while `gdalUtils` requises a pre-instalation of <a href="https://www.gdal.org/">GDAL</a> and <a href="https://cran.r-project.org/web/packages/rgdal/index.html">rgdal</a>.
+While my algorithm uses R, this language serves mainly as a wrapper. When perfoming RAM demanding tasks such as e.g. mosaicking, the algorithm calls GDAL. The algorithm can be installed using devtools as shown below.
 </p>
 
 ```r
 devtools::install_github("RRemelgado/iDivR")
 ```
+
+</br>
+
+### Parallel processing and time requiremnts
+<p align="justify">
+The algorithm takes advantage of multi-core processing dividing the total number of tiles equaly among the different cores. I estimated that the processing time for each tile, including download, masking and temporal interpolation and averaging, requires 6-7h. The mosaicking requires 1-2h.
+<p aligh="justify">
+
+</br>
+
+### Data storage: how is the data handled?
+</p align="align">
+My programming solution avoids the storage of large amounts of data unless necessary. To achieve this, the algorithm keeps the most basic tasks (i.e. data download, masking, interpolation, compositing) on a tile-by-tile basis. For each tile, once the pre-procesisng is completed, all temporaly files (e.g. hdf's) are deleted. Moreover, only one image is kept for each 8-day composite resulting from the mean of the TERRA and AQUA products thus halving the required data storage.
+</p
+
+</br>
+
+### Error handling
+</p align="align">
+Often, NASA's servers contain corrupted files that, while downloadable, can't be read. When left unchecked, this will stop the processing chain. To avoid this, the algorithm considers the download warnings. If the the file to download if labeled as corrupt, the algorithm will remove it and will report the lack of an output file. For example, if for a given data we are able ot download data for TERRA but not for AQUA, the algorithm will skip the step involving the combination of TERRA and AQUA.
+</p
+
+</br>
+
+### Gap filling
+</p align="align">
+The algorithm addresses data gaps using linear inteporlation. For each x,y pixel coordinate, the algorithm extracts the corresponding time series and, for each observation, searchs for the closest, non-NA values in time. The search is constrained ot 60 days in the past and future avoiding the over-generalization of the time series.
+</p
 
 </br>
 
@@ -56,16 +84,15 @@ Using this data, I filtered out all polygons where the minimum percent overlap w
   <p align="center"><small>Figure 2 - Red circles highlight land masses that were excluded from further processing</small></p>
 </figure>
 
-</br>
-
-### Data storage: how is the dta handled?
-</p align="align">
-My programming solution avoids the storage of large amounts of data unless necessary. To achieve this, I keep the most basic tasks (i.e. data download, masking, interpolation, compositing) on a tile-by-tile basis. For each tile, once the pre-procesisng is completed, all temporaly files (e.g. .hdf's) are deleted. Moreover, only one image is kept for each 8-day composite achieved by combining TERRA and AQUA thus halving the required data storage.
-</p
+<figure>
+  <p align="center"><img src="https://github.com/RRemelgado/iDivR/blob/master/inst/extdata/modisTiles.jpeg" width="800"></p>
+  <p align="center"><small>Figure 3 - Comparison of taken MODIS tiles (in yellow) against the ones excluded (in red)</small></p>
+</figure>
 
 </br>
 
-### Parallel processing
-<p align="justify">
-For the base processing, tile-wise tasks, my algorithm uses 
-</p>
+
+</br>
+
+
+the Python provided through the the `reticulate` package and the 

@@ -33,34 +33,10 @@ proLST <- function(tile, date, data.path) {
   if (!dir.exists(data.path)) {stop('"data.path" is not a valid path')}
   
 #-------------------------------------------------------------------------------------------------------------------------------#
-# 2. update target dates
-#-------------------------------------------------------------------------------------------------------------------------------#
-  
-  ud <- unique(dates) # unique dates
-  yrs <- year(ud)
-  doa <- (ud-as.Date(paste0(as.character(yrs), '-01-01')))+1
-  
-  # find nearest dates to downloaded
-  potential.doa <- seq(1, 365, 8)
-  tmp <- lapply(1:length(doa), function(i) {
-    diff <- abs(doa[i] - potential.doa)
-    pd <- potential.doa[which(diff==min(diff))]
-    py <- replicate(length(pd), yrs[i])
-    dt <- as.Date(paste0(yrs[i], '-01-01')) + (as.numeric(pd)-1)
-    return(list(doa=pd, year=py, date=dt))})
-  
-  # update temporal information
-  ud <- do.call('c', lapply(tmp, function(x) {x$date}))
-  ind <- !duplicated(ud)
-  ud <- ud[ind]
-  doa <- unlist(sapply(tmp, function(x) {x$doa}))[ind]
-  yrs <- unlist(sapply(tmp, function(x) {x$year}))[ind]
-  
-#-------------------------------------------------------------------------------------------------------------------------------#
 # 3. download and combine MODIS TERRA/AQUA
 #-------------------------------------------------------------------------------------------------------------------------------#
   
-  downloaded.files <- rbind(downloadLST(tile, ud[d], product="MOD11A2"), downloadLST(tile, ud[d], product="MYD11A2"))
+  downloaded.files <- rbind(downloadLST(tile, date, product="MOD11A2"), downloadLST(tile, date, product="MYD11A2"))
   i <- which(!is.na(downloaded.files$file)) # which files are available?
   if (length(i) > 0) {
     
@@ -70,27 +46,30 @@ proLST <- function(tile, date, data.path) {
     
     ofiles <- extractLST(downloaded.files$file, ofiles, delete.original=TRUE)
     
+    cc <- sum(complete.cases(ofiles)) # check if data was processed
+    
     # combine files (if available for TERRA and AQUA)
-    if (length(i) > 1) {
+    if (cc == 2) {
       
-      ofile1 <- paste0(data.path, as.character(ud[d]), "_", tile, "_combined_lst-day.tif")
-      calc(stack(ofiles[c(1,3)]), mean, na.rm=TRUE, filename=ofile1, datatype="INT2U", overwrite=TRUE)
+      ofile1 <- paste0(data.path, as.character(date), "_", tile, "_combined_lst-day.tif")
+      calc(stack(ofiles$day), mean, na.rm=TRUE, filename=ofile1, datatype="INT2U", overwrite=TRUE)
       
-      rm(agg)
-      file.remove(ofiles[c(1,3)])
-      
-      ofile2 <- paste0(data.path, as.character(ud[d]), "_", tile, "_combined_lst-night.tif")
-      calc(stack(ofiles[c(2,4)]), mean, na.rm=TRUE, filename=ofile2, datatype="INT2U", overwrite=TRUE)
-      
-      rm(agg)
-      file.remove(ifile[c(2,4)])
-      
+      ofile2 <- paste0(data.path, as.character(date), "_", tile, "_combined_lst-night.tif")
+      calc(stack(ofiles$night), mean, na.rm=TRUE, filename=ofile2, datatype="INT2U", overwrite=TRUE)
+    
+      file.remove(c(ofiles$day, ofiles$night))
       ofiles <- c(ofile1, ofile2)
       
     }
     
-  } else {ofiles <- NULL}
+    if (cc == 0) {ofiles <- c(NA,NA)}
+    
+    
+  } else {
+    file.remove(downloaded.files)
+    ofiles <- c(NA, NA)
+  }
   
-  return(data.frame(date=ud[d], file.day=ofiles[1], file.night=ofiles[2], stringsAsFactors=FALSE))
+  return(data.frame(date=date, file.day=ofiles[1], file.night=ofiles[2], stringsAsFactors=FALSE))
   
 }
