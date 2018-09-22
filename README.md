@@ -27,7 +27,11 @@ devtools::install_github("RRemelgado/iDivR")
 
 ### Parallel processing and time requiremnts
 <p align="justify">
-The algorithm takes advantage of multi-core processing dividing the total number of tiles equaly among the different cores. I estimated that the processing time for each tile, including download, masking and temporal interpolation and averaging, requires 6-7h. The mosaicking requires 1-2h.
+The algorithm takes advantage of multi-core processing dividing the total number of tiles equaly among the different cores. I estimated that the processing time for each tile (per year) is as following:
+<item><b>download and masking:</b> ~45 min.</item>
+<item><b>gap filling:</b> ~1h</item>
+<item><b>monthly mean composition:</b> 40 sec to 1 min.</item>
+<item><b>global compositing:</b> ~1h</item>.
 <p aligh="justify">
 
 </br>
@@ -102,7 +106,3 @@ While I didn't have the chance to do, I considered improving the proposed algori
 Another way I would improve my codes is to generalize the use of c++ for data processing. This would particularly useful when a High Performance Computer (HPC) is available allowing the data processing to be R independent. Tasks such as gap filling (see c++ code <a href="">here</a>) can be done in such a way by first stacking the time-series of LST (as already done), exporting the values as a csv and transfering them to the HPC (Fig. 4). When dealing with high resolution data (e.g. Landsat, Sentinel) this process can be preceeded by the splitting of the data into small, equal sized parts that can be processed in parallel in the HPC and them recombined into a single Raster object once the processing is completed.
 
 <p>
-
-
-
-

@@ -2,7 +2,7 @@
 #'
 #' @description Fill temporal gaps in LST \emph{RasterLayer} objects.
 #' @param x \emph{character} vector with the paths of \emph{RasterLayers}.
-#' @param
+#' @param y an Object of class \emph{date} with the same length as \emph{x}.
 #' @importFrom RCurl getURL url.exists
 #' @importFrom lubridate is.Date
 #' @importFrom raster stack calc getValues setValues

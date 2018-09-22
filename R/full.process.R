@@ -3,7 +3,8 @@
 #' @description Full processing of LST including data download, masking, monthly averaging and compositing
 #' @param tiles \emph{character} vector specifying the target MODIS tile (e.g. "h01v01")
 #' @param dates a vector of class \emph{Date} containing the target download dates.
-#' @param data.path Output data path for downloaded data.
+#' @param data.path1 Output data path for downloaded data.where tile-wise data will be stored.
+#' @param data.path2 Output data path for downloaded data.where Mosaics will be stored.
 #' @importFrom RCurl getURL url.exists
 #' @importFrom lubridate is.Date
 #' @importFrom raster stack calc getValues setValues
@@ -21,24 +22,20 @@ full.process <- function(tile, dates, data.path1, data.path2) {
     
   # fill data gaps and generate monthly composites (day)
   stk <- stack(odf$file.day)
-  rv <- getValues(stk)
   i <- which(dates$year == year)
-  rv <- intTime(rv, as.numeric(dates$date[i]), month(dates$date[i]))
-  stk <- stk[[1:12]]
-  stk <- setValues(stk, rv)
-  ofile <-paste0(data.path2, year, "_", t, "_day-lst.tif")
-  writeRaster(stk, ofile, datatype=dataType(stk), options="COMPRESS=LZW", overwrite=TRUE)
-  rm(stk)
+  mmc <- monthly.mean.lst(r.stk, dates[i])
+  ofile <-paste0(data.path2, year, "_", t, "lst-day.tif")
+  writeRaster(stk, ofile, datatype="INT2U", options=c("COMPRESS=DEFLATE"), overwrite=TRUE)
+  
+  rm(stk, mmc, i)
   
   # fill data gaps and generate monthly composites night)
   stk <- stack(odf$file.night)
-  rv <- getValues(stk)
   i <- which(dates$year == year)
-  rv <- intTime(rv, as.numeric(dates$date[i]), month(dates$date[i]))
-  stk <- stk[[1:12]]
-  stk <- setValues(stk, rv)
-  ofile <-paste0(data.path2, year, "_", t, "_night-lst.tif")
-  writeRaster(stk, ofile, datatype=dataType(stk), options="COMPRESS=LZW", overwrite=TRUE)
-  rm(stk)
+  mmc <- monthly.mean.lst(r.stk, dates[i])
+  ofile <-paste0(data.path2, year, "_", t, "_lst-night.tif")
+  writeRaster(stk, ofile, datatype="INT2U", options=c("COMPRESS=DEFLATE"), overwrite=TRUE)
+  
+  rm(stk, mmc, i)
  
 }
