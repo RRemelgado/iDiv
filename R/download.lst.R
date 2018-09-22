@@ -1,4 +1,4 @@
-#' @title downloadLST
+#' @title download.lst
 #'
 #' @description Interface to download and process Land Surface Temperature (LST) data.
 #' @param tiles \emph{character} vector specifying the target MODIS tile (e.g. "h01v01")
@@ -15,7 +15,7 @@
 #------------------------------------------------------------------------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------------------------------------------------------------------------#
 
-downloadLST <- function(tile, date, product="") {
+download.lst <- function(tile, date, product="") {
   
 #------------------------------------------------------------------------------------------------------------------------------------------------#
 # 1. check input variables

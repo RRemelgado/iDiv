@@ -1,4 +1,4 @@
-#' @title proLST
+#' @title pro.lst
 #'
 #' @description Interface to download and process tile-wise Land Surface Temperature (LST) data.
 #' @param tiles \emph{character} vector specifying the target MODIS tile (e.g. "h01v01")
@@ -22,7 +22,7 @@
 #-------------------------------------------------------------------------------------------------------------------------------#
 
 # land surface temperature
-proLST <- function(tile, date, data.path) {
+pro.lst <- function(tile, date, data.path) {
   
 #-------------------------------------------------------------------------------------------------------------------------------#
 # 1. Check input variables
@@ -36,7 +36,7 @@ proLST <- function(tile, date, data.path) {
 # 3. download and combine MODIS TERRA/AQUA
 #-------------------------------------------------------------------------------------------------------------------------------#
   
-  downloaded.files <- rbind(downloadLST(tile, date, product="MOD11A2"), downloadLST(tile, date, product="MYD11A2"))
+  downloaded.files <- rbind(download.lst(tile, date, product="MOD11A2"), download.lst(tile, date, product="MYD11A2"))
   i <- which(!is.na(downloaded.files$file)) # which files are available?
   if (length(i) > 0) {
     
@@ -44,7 +44,7 @@ proLST <- function(tile, date, data.path) {
     
     ofiles <- paste0(data.path, downloaded.files$date, "_", tile, "_", downloaded.files$product)
     
-    ofiles <- extractLST(downloaded.files$file, ofiles, delete.original=TRUE)
+    ofiles <- extract.lst(downloaded.files$file, ofiles, delete.original=TRUE)
     
     cc <- sum(complete.cases(ofiles)) # check if data was processed
     
@@ -65,10 +65,7 @@ proLST <- function(tile, date, data.path) {
     if (cc == 0) {ofiles <- c(NA,NA)}
     
     
-  } else {
-    file.remove(downloaded.files)
-    ofiles <- c(NA, NA)
-  }
+  } else {ofiles <- c(NA, NA)}
   
   return(data.frame(date=date, file.day=ofiles[1], file.night=ofiles[2], stringsAsFactors=FALSE))
   

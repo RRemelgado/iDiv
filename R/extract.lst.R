@@ -1,4 +1,4 @@
-#' @title extractLST
+#' @title extract.lst
 #'
 #' @description Interface to download and process tile-wise Land Surface Temperature (LST) data.
 #' @param tiles \emph{character} vector specifying the target MODIS tile (e.g. "h01v01")
