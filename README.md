@@ -28,7 +28,7 @@ devtools::install_github("RRemelgado/iDivR")
 I estimated that the processing time for each tile (per year) is as following:
 <ul>
   <li><b>download and masking:</b> ~45 min.</li>
-  <li><b>gap filling:</b> ~1h</li>
+  <li><b>gap filling:</b> ~3h</li>
   <li><b>monthly mean composition:</b> 40 sec to 1 min.</li>
   <li><b>global compositing:</b> ~1h</li>.
 </ul>
