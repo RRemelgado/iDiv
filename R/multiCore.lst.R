@@ -7,8 +7,8 @@
 #' @param data.path1 Output data path for downloaded data.where tile-wise data will be stored.
 #' @param data.path2 Output data path for downloaded data.where Mosaics will be stored.
 #' @importFrom lubridate is.Date
-#' @importFrom parallel detectCores
-#' @importFrom doParallel registerDoParallel
+#' @importFrom parallel detectCores makeCluster stopCluster
+#' @import doParallel
 #' @importFrom foreach foreach
 #' @return One \emph{RasterStack} object for each element in \emph{tiles}.
 #' @export
@@ -31,11 +31,16 @@ multiCore.lst <- function(tiles, dates, year, data.path1, data.path2) {
 # 2. perform parallel processing
 #-------------------------------------------------------------------------------------------------------------------------------#
   
-  # register cores for parallel processing
-  registerDoParallel(cores=detectCores(all.tests=FALSE, logical=TRUE))
+  # Calculate the number of cores
+  no_cores <- detectCores() - 1
   
-  foreach(t=1:length(tiles)) %dopar% try(
-    full.process(tiles[t], dates, data.path1, data.path2)
-  )
-
+  # Initiate cluster
+  cl <- makeCluster(no_cores)
+  
+  registerDoParallel(cl, cores=detectCores(all.tests=FALSE, logical=TRUE))
+  
+  foreach(t=1:length(tiles), .packages='iDivR') %dopar% full.process(tiles[t], dates, data.path1, data.path2)
+  
+  stopCluster(cl)
+  
 }

@@ -1,18 +1,18 @@
-#' @title update.dates
+#' @title updateDates
 #'
 #' @description Finds closest, possible dates to download LST data for.
 #' @param x a vector of class \emph{Date} containing the target download dates.
 #' @importFrom lubridate is.Date month
 #' @return a \emph{data.frame}.
-#' @details {Finds closest, possible dates to download 8-day LST data based on a set 
-#' of reference dates. Additionally, the function reports on the year, month and Day 
-#' of Acquisition (DoA).}
+#' @details {Finds closest, possible dates to download 8-day LST data based on a 
+#' set of reference dates. Additionally, the function reports on the year, month 
+#' and Day of Acquisition (DoA).}
 #' @export
 
 #-------------------------------------------------------------------------------------------------------------------------------#
 #-------------------------------------------------------------------------------------------------------------------------------#
 
-update.dates <- function(x) {
+updateDates <- function(x) {
   
 #-------------------------------------------------------------------------------------------------------------------------------#
 # 1. check input variables
