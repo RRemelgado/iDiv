@@ -37,7 +37,7 @@ I estimated that the processing time for each tile (per year) is as following:
 ### Data storage: how is the data handled?
 </p align="justify">
 The functions avoid the storage of large amounts of data unless necessary. To achieve this, the most basic tasks (i.e. data download, masking, interpolation, compositing) are kept on a tile-by-tile basis and, once a step is completed, all temporaly files (e.g. hdf's) are deleted.
-</p
+</p>
 
 ### Error handling
 </p align="align">
@@ -46,7 +46,7 @@ Often, NASA's servers contain corrupted files that will stop the processing chai
 
 ### Gap filling
 </p align="align">
-iDivR provides functions that deals with data gaps using linear inteporlation (Fig. 2). For each x,y pixel coordinate, the algorithm extracts the corresponding time series and, for each observation, searchs for the closest, non-NA values in time. The search is constrained ot 60 days in the past and future avoiding the over-generalization of the time series.
+iDivR provides functions that deals with data gaps using linear inteporlation (Fig. 2). For each x,y pixel coordinate, the algorithm extracts the corresponding time series and, for each observation, searchs for the closest, non-NA values in time. The search is constrained ot 60 days in the past and future avoiding the over-generalization of the time series and the consequent removal of relevant seasonal patterns.
 </p
 
 <figure>
