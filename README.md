@@ -1,9 +1,9 @@
 ### Global, monthly Land Surface Temperature (LST)
 <p align="justify">
 This exercise aims to derive global, day/night, monthly LST based on 8-day TERRA (<a href="https://lpdaac.usgs.gov/dataset_discovery/modis/modis_products_table/mod11a2_v006">MOD11A2</a>) and AQUA (<a href="https://lpdaac.usgs.gov/dataset_discovery/modis/modis_products_table/myd11a2_v006">MYD11A2</a>) data. My algorithm (Fig. 1) focuses on tile-wise processing. For each target tile, the algorithm performs the following, general steps:
-<item>Downloads TERRA and AQUA data from the <a href="https://ladsweb.modaps.eosdis.nasa.gov/">LAADS DAAC</a> server</item>
-<item>Combines TERRA and AQUA data on a daily basis</item>
-<item>Interpolates data gaps and derives mean LST</item>
+<li>Downloads TERRA and AQUA data from the <a href="https://ladsweb.modaps.eosdis.nasa.gov/">LAADS DAAC</a> server</li>
+<li>Combines TERRA and AQUA data on a daily basis</li>
+<li>Interpolates data gaps and derives mean LST</li>
 Finnally, a global mosaic is build for each month using all tiles. As an example, I derived monthly mean composites for the year of 2017 for continental Europe. This data can be accessed <a href="">here</a>.
 </p>
 
