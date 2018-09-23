@@ -1,9 +1,11 @@
 ### Global, monthly Land Surface Temperature (LST)
 <p align="justify">
 This exercise aims to derive global, day/night, monthly LST based on 8-day TERRA (<a href="https://lpdaac.usgs.gov/dataset_discovery/modis/modis_products_table/mod11a2_v006">MOD11A2</a>) and AQUA (<a href="https://lpdaac.usgs.gov/dataset_discovery/modis/modis_products_table/myd11a2_v006">MYD11A2</a>) data. My algorithm (Fig. 1) focuses on tile-wise processing. For each target tile, the algorithm performs the following, general steps:
-<li>Downloads TERRA and AQUA data from the <a href="https://ladsweb.modaps.eosdis.nasa.gov/">LAADS DAAC</a> server</li>
-<li>Combines TERRA and AQUA data on a daily basis</li>
-<li>Interpolates data gaps and derives mean LST</li>
+<ul>
+  <li>Downloads TERRA and AQUA data from the <a href="https://ladsweb.modaps.eosdis.nasa.gov/">LAADS DAAC</a> server</li>
+  <li>Combines TERRA and AQUA data on a daily basis</li>
+  <li>Interpolates data gaps and derives mean LST</li>
+</ul>
 Finnally, a global mosaic is build for each month using all tiles. As an example, I derived monthly mean composites for the year of 2017 for continental Europe. This data can be accessed <a href="">here</a>.
 </p>
 
@@ -28,16 +30,18 @@ devtools::install_github("RRemelgado/iDivR")
 ### Parallel processing and time requiremnts
 <p align="justify">
 The algorithm takes advantage of multi-core processing dividing the total number of tiles equaly among the different cores. I estimated that the processing time for each tile (per year) is as following:
-<item><b>download and masking:</b> ~45 min.</item>
-<item><b>gap filling:</b> ~1h</item>
-<item><b>monthly mean composition:</b> 40 sec to 1 min.</item>
-<item><b>global compositing:</b> ~1h</item>.
-<p aligh="justify">
+<ul>
+  <il><b>download and masking:</b> ~45 min.</il>
+  <il><b>gap filling:</b> ~1h</il>
+  <il><b>monthly mean composition:</b> 40 sec to 1 min.</il>
+  <il><b>global compositing:</b> ~1h</il>.
+</ul>
+</p>
 
 </br>
 
 ### Data storage: how is the data handled?
-</p align="align">
+</p align="justify">
 My programming solution avoids the storage of large amounts of data unless necessary. To achieve this, the algorithm keeps the most basic tasks (i.e. data download, masking, interpolation, compositing) on a tile-by-tile basis. For each tile, once the pre-procesisng is completed, all temporaly files (e.g. hdf's) are deleted. Moreover, only one image is kept for each 8-day composite resulting from the mean of the TERRA and AQUA products thus halving the required data storage.
 </p
 
