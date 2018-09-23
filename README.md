@@ -91,7 +91,7 @@ Using this data, I filtered out all polygons where the minimum percent overlap w
 </p>
 
 <figure>
-  <p align="center"><img src="https://github.com/RRemelgado/iDivR/blob/master/inst/extdata/admFilter.jpeg" width="800"></p>
+  <p align="center"><img src="https://github.com/RRemelgado/iDivR/blob/master/inst/extdata/admFilter.jpg" width="800"></p>
   <p align="center"><small>Figure 3 - Red circles highlight land masses that were excluded from further processing</small></p>
 </figure>
 
@@ -130,6 +130,6 @@ To demonstrate the applicability of the code, I derived the following data for t
 </p>
 
 <figure>
-  <p align="center"><img src="https://github.com/RRemelgado/iDivR/blob/master/inst/extdata/diagram_2.jpg" width="600"></p>
+  <p align="center"><img src="https://github.com/RRemelgado/iDivR/blob/master/inst/extdata/globalMosaic.jpg" width="600"></p>
   <p align="center"><small>Figure 7 - HPC compatible image processing</small></p>
 </figure>
