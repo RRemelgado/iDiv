@@ -107,12 +107,12 @@ Using this data, I filtered out all polygons where the minimum percent overlap w
 
 ### Potential improvements
 <p align="justify">
-I would improve my codes by generalizing the use of c++ for data processing. This would particularly useful when a High Performance Computer (HPC) is available allowing the data processing to be R independent (Fig. 5). Tasks such as gap filling (see c++ code <a href="">here</a>) can be done in such a way by first stacking the time-series of LST (as already done), exporting the values as a csv and transfering them to the HPC (Fig. 4). When dealing with high resolution data (e.g. Landsat, Sentinel) this process can be preceeded by the splitting of the data into small, equal sized parts that can be processed in parallel in the HPC and them recombined into a single Raster object once the processing is completed.
+I would improve my codes by generalizing the use of c++ for data processing. This would particularly useful when a High Performance Computer (HPC) is available allowing the data processing to be R independent (Fig. 5). Tasks such as gap filling (see c++ code <a href="">here</a>) can be done in such a way by first stacking the time-series of LST (as already done), exporting the values as a csv and transfering them to the HPC (Fig.6). When dealing with high resolution data (e.g. Landsat, Sentinel) this process can be preceeded by the splitting of the data into small, equal sized parts that can be processed in parallel in the HPC and them recombined into a single Raster object once the processing is completed.
 <p>
 
 <figure>
   <p align="center"><img src="https://github.com/RRemelgado/iDivR/blob/master/inst/extdata/diagram_2.jpg" width="600"></p>
-  <p align="center"><small>Figure 5 - HPC compatible image processing</small></p>
+  <p align="center"><small>Figure 6 - HPC compatible image processing</small></p>
 </figure>
 
 </br>
@@ -124,7 +124,12 @@ To demonstrate the applicability of the code, I derived the following data for t
   <li>8-day images (tile-wise)</li>
   <li>Monthly-mean composites (tile-wise)</li>
   <li>Monthly-mean composites (continental Europe)</li>
-  <li>Monthly-mean of June extending the results for continental Europe to simulate a global dataset</li>
+  <li>Monthly-mean of June extending the results for continental Europe to simulate a global dataset (Fig. 7)</li>
   <li>Gap-filled, monthly-mean composites for the Leipzing area</li>
 </ul>
 </p>
+
+<figure>
+  <p align="center"><img src="https://github.com/RRemelgado/iDivR/blob/master/inst/extdata/diagram_2.jpg" width="600"></p>
+  <p align="center"><small>Figure 7 - HPC compatible image processing</small></p>
+</figure>
