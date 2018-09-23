@@ -75,7 +75,7 @@ Using this data, I filtered out all polygons where the minimum percent overlap w
 
 <figure>
   <p align="center"><img src="https://github.com/RRemelgado/iDivR/blob/master/inst/extdata/modisTiles.jpg" width="800"></p>
-  <p align="center"><small>Figure 4 - Comparison of taken MODIS tiles (in yellow) against the ones excluded (in red)</small></p>
+  <p align="center"><small>Figure 4 - Comparison of MODIS tiles for which LST is avaible tiles (in yellow) and the ones excluded when considering the percent pixel overlap (in red)</small></p>
 </figure>
 
 ### Example Results
