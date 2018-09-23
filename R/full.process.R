@@ -30,7 +30,7 @@ full.process <- function(tile, dates, data.path1, data.path2) {
     # generate monthly composites day)
     stk <- stack(odf$file.day)
     mmc <- monthly.mean.lst(stk, dates[i])
-    ofile <-paste0(data.path2, uyr[y], "_", tile, "lst-day.tif")
+    ofile <-paste0(data.path2, uyr[y], "_", tile, "_lst-day.tif")
     writeRaster(stk, ofile, datatype="INT2U", options=c("COMPRESS=DEFLATE", "PREDICTOR=2", "ZLEVEL=6"), overwrite=TRUE)
     
     rm(stk, mmc)

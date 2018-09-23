@@ -28,16 +28,16 @@ multiCore.lst <- function(tiles, dates, year, data.path1, data.path2) {
   if (!dir.exists(data.path2)) {stop('"data.path2" is not a valid path')}
   
 #-------------------------------------------------------------------------------------------------------------------------------#
-# 2. perform parallel processing
+# 2. configure parallel processing
 #-------------------------------------------------------------------------------------------------------------------------------#
   
-  # Calculate the number of cores
-  no_cores <- detectCores() - 1
-  
-  # Initiate cluster
-  cl <- makeCluster(no_cores)
-  
-  registerDoParallel(cl, cores=detectCores(all.tests=FALSE, logical=TRUE))
+  nr.cores <- detectCores() - 1 # Calculate the number of cores
+  cl <- makeCluster(nr.cores) # Initiate cluster
+  registerDoParallel(cl, cores=nr.cores) # register numer of processes
+ 
+#-------------------------------------------------------------------------------------------------------------------------------#
+# 3. do parallel processing
+#-------------------------------------------------------------------------------------------------------------------------------#
   
   foreach(t=1:length(tiles), .packages='iDivR') %dopar% full.process(tiles[t], dates, data.path1, data.path2)
   
