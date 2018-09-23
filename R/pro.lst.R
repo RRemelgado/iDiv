@@ -1,12 +1,12 @@
 #' @title pro.lst
 #'
 #' @description Interface to download and process tile-wise Land Surface Temperature (LST) data.
-#' @param tiles \emph{character} vector specifying the target MODIS tile (e.g. "h01v01")
-#' @param dates a vector of class \emph{Date} containing the target download dates.
+#' @param tile \emph{character} vector specifying the target MODIS tile (e.g. "h01v01")
+#' @param date a vector of class \emph{Date} containing the target download dates.
 #' @param data.path Output data path for downloaded data.
-#' @import grDevices sp rgdal ncdf4
 #' @importFrom raster calc stack
 #' @importFrom lubridate is.Date
+#' @importFrom stats complete.cases
 #' @return One or multiple raster objects.
 #' @details {Downloads and pre-processes 
 #' \link[https://lpdaac.usgs.gov/dataset_discovery/modis/modis_products_table/mod11a2_v006]{MOD11A2} and 

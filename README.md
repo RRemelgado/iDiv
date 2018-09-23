@@ -99,10 +99,11 @@ Using this data, I filtered out all polygons where the minimum percent overlap w
 </br>
 
 ### Potential improvements
-<p alion="justify">
-While I didn't have the chance to do, I considered improving the proposed algorithm using the `reticulate` package. This R package allows the inclusion of Python in basic pre-procesing steps and could be used whenever dealing with more RAM demanding tasks and datasets. As of the time being, I have successfully integrated `reticulate` in `iDivR` and can easily call e.g. GDAL through it.
-</p
 <p align="justify">
-Another way I would improve my codes is to generalize the use of c++ for data processing. This would particularly useful when a High Performance Computer (HPC) is available allowing the data processing to be R independent. Tasks such as gap filling (see c++ code <a href="">here</a>) can be done in such a way by first stacking the time-series of LST (as already done), exporting the values as a csv and transfering them to the HPC (Fig. 4). When dealing with high resolution data (e.g. Landsat, Sentinel) this process can be preceeded by the splitting of the data into small, equal sized parts that can be processed in parallel in the HPC and them recombined into a single Raster object once the processing is completed.
-
+I would improve my codes by generalizing the use of c++ for data processing. This would particularly useful when a High Performance Computer (HPC) is available allowing the data processing to be R independent. Tasks such as gap filling (see c++ code <a href="">here</a>) can be done in such a way by first stacking the time-series of LST (as already done), exporting the values as a csv and transfering them to the HPC (Fig. 4). When dealing with high resolution data (e.g. Landsat, Sentinel) this process can be preceeded by the splitting of the data into small, equal sized parts that can be processed in parallel in the HPC and them recombined into a single Raster object once the processing is completed.
 <p>
+
+<figure>
+  <p align="center"><img src="https://github.com/RRemelgado/iDivR/blob/master/inst/extdata/diagram_2.jpg" width="600"></p>
+  <p align="center"><small>Figure 4 - HPC compatible image processing</small></p>
+</figure>

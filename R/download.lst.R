@@ -1,10 +1,9 @@
 #' @title download.lst
 #'
 #' @description Interface to download and process Land Surface Temperature (LST) data.
-#' @param tiles \emph{character} vector specifying the target MODIS tile (e.g. "h01v01")
-#' @param dates a vector of class \emph{Date} containing the target download dates.
-#' @param data.path Output data path for downloaded data.
-#' @import grDevices sp rgdal ncdf4
+#' @param tile \emph{character} vector specifying the target MODIS tile (e.g. "h01v01")
+#' @param date a vector of class \emph{Date} containing the target download dates.
+#' @param product Product to download (MOD11A2 or MYD11A2).
 #' @importFrom XML htmlParse readHTMLTable xmlRoot
 #' @importFrom httr GET write_disk authenticate
 #' @importFrom RCurl getURL url.exists
@@ -24,8 +23,6 @@ download.lst <- function(tile, date, product="") {
   # check tile
   if (length(tile) > 1) {stop('"tile" has more than 1 element')}
   if (substr(tile, 1, 1)!="h" & substr(tile, 4, 4)!="v") {stop('"tile" is misspeled')}
-  data(tile.names) # load tile names
-  if (!tile %in% tile.names) {stop('"tile" does not exist (maybe a misspeling?)')}
   
   # check and formt temporal information
   if (!is.Date(date)) {stop('"date" is not a valid object')}

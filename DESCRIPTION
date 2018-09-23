@@ -1,10 +1,17 @@
 Package: iDivR
-Title: What the Package Does (one line, title case)
-Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-Depends: R (>= 3.5.0)
-License: What license is it under?
-Encoding: UTF-8
-LazyData: true
+Type: Package
+Title: iDiv interview exercise
+Version: 0.2.5
+Date: 2018-09-03
+Authors@R: person("Ruben", "Remelgado", role = c("aut", "cre"), email="ruben.remelgado@uni-wuerzburg.de")
+URL: https://github.com/RRemelgado/iDivR/tree/master/
+BugReports: https://github.com/RRemelgado/iDivR/issues/
+Maintainer: Ruben Remelgado <ruben.remelgado@uni-wuerzburg.de>
+Description: Download and processing of global, monthly mean Land Surface Temperature (LST) data.
+LazyData: TRUE
+Imports: raster, sp, caret, rgdal, gdalUtils, httr, XML, grDevices, RCurl, lubridate, pryr, plyr, lattice, parallel, doParallel, foreach
 RoxygenNote: 6.1.0
+License: GPL (>= 3)
+Suggests: knitr, rmarkdown, kableExtra, imager, devtools
+VignetteBuilder: knitr
+Encoding: UTF-8

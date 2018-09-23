@@ -3,8 +3,8 @@
 #' @description Derives monthly-mean LST based on a \emph{RasterStack}.
 #' @param x A \emph{RasterStack}.
 #' @param y an Object of class \emph{date} with the same length as \emph{x}.
-#' @importFrom lubridate is.Date months
-#' @importFrom raster stack calc
+#' @importFrom lubridate is.Date month
+#' @importFrom raster stack calc nlayers
 #' @details Builds a \emph{RasterStack} of monthly-mean lST based on e.g. 8-day images.
 #' @return A \emph{RasterStack}.
 #' @export
@@ -21,7 +21,7 @@ monthly.mean.lst <- function(x, y) {
   # check is list of files can be read
   if (!is.Date(y)) {stop('"y" is not a Date object')}
   if (length(y) != nlayers(x)) {stop('"x" and "y" have different lenghts')}
-  y.months <- months(y)
+  y.months <- month(y)
   unique.months <- unique(y.months)
   
 #------------------------------------------------------------------------------------------------------------------------------------------------#

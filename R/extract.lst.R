@@ -1,10 +1,9 @@
 #' @title extract.lst
 #'
 #' @description Interface to download and process tile-wise Land Surface Temperature (LST) data.
-#' @param tiles \emph{character} vector specifying the target MODIS tile (e.g. "h01v01")
-#' @param dates a vector of class \emph{Date} containing the target download dates.
-#' @param data.path Output data path for downloaded data.
-#' @import grDevices sp rgdal ncdf4
+#' @param ifile Path to hdf file.
+#' @param ofile Base filename of the output. The name will be \emph{ofile} + '_day-lst.tif' and \emph{ofile} + '_night-lst.tif'
+#' @param delete.original Logical argument specifying if the hdf should be deleted when processed.
 #' @importFrom gdalUtils gdal_translate
 #' @importFrom raster raster writeRaster
 #' @return One or multiple raster objects.
@@ -21,7 +20,7 @@
 #-------------------------------------------------------------------------------------------------------------------------------#
 #-------------------------------------------------------------------------------------------------------------------------------#
 
-extractLST <- function(ifile, ofile, delete.original=TRUE) {
+extract.lst <- function(ifile, ofile, delete.original=TRUE) {
   
 #------------------------------------------------------------------------------------------------------------------------------------------------#
 # 1. check input variables
