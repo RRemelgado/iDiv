@@ -41,7 +41,8 @@ The functions avoid the storage of large amounts of data unless necessary. To ac
 
 ### Error handling
 </p align="align">
-Often, NASA's servers contain corrupted files that will stop the processing chain when left unchecked. If the to downloaded file is labeled as corrupt, the algorithm will remove it and will skip the remaining tasks. However, if only one of the sensors (i.e. TERRA and AQUA) has corrupted files for a given date, the remaining one will still be processed. The file naming convenction will reflect this fact. When combining TERRA and AQUA, the output files will be named as "combined". Otherwise, they will be named according to the product of origin (i.e. "MOD11A2" or "MYD11A2").</p
+Often, NASA's servers contain corrupted files that will stop the processing chain when left unchecked. If the to downloaded file is labeled as corrupt, the algorithm will remove it and will skip the remaining tasks. However, if only one of the sensors (i.e. TERRA and AQUA) has corrupted files for a given date, the remaining one will still be processed. The file naming convenction will reflect this fact. When combining TERRA and AQUA, the output files will be named as "combined". Otherwise, they will be named according to the product of origin (i.e. "MOD11A2" or "MYD11A2").
+</p>
 
 ### Gap filling
 </p align="align">
