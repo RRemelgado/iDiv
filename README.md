@@ -125,53 +125,57 @@ Below, I started developing a c++ code to fill data gaps which can be used with 
 
 #include <RcppArmadillo.h>
 using namespace Rcpp ;
-using namespace arma;  
+using namespace arma;
 
 // [[Rcpp::export]]
-
 NumericVector intime(NumericVector x, NumericVector y, int z) {
-  
-  double N = x.size()-1;
+
+  int n = x.size()-1;
   NumericVector v = y;
-  
-  for (int i=1; i< N; i++) {
-    
-    bool cond = y[i] != y[i];
-    
-    if (cond) {
-      
-      int x1 = x[i]-z;
-      int x2 = x[i]+z;
-      
-      int i1 = -1;
-      while (i1 < 0) for (int j=i-1; j > 0; i--) if (is_finite(y[j])) if (x[i] > x1) i1 = j;
-      int i2 = -1;
-      while (i1 < 0) for (int j=i+1; j > 0; i++) if (is_finite(y[j])) if (x[i] < x2) i1 = j;
-      
-      if (i1 > -1) {
-        
-        if (i2 > -1) {
-          
-          double a = 0;
-          double b = 0;
-          
-          double xsum = x[i1] + x[i2];
-          double x2sum = pow(x[i1],2) + pow(x[i2],2);
-          double xsum2 = pow(xsum,2);
-          double ysum = y[i1] + y[i2];
-          double xysum = xsum * ysum;
-          
-          a = (ysum*x2sum - xsum*ysum) / (N*x2sum-xsum2);
-          b = (N*xysum-(xsum*ysum)) / (N*x2sum-xsum2);
-          
-          v(i) = b + a * x[i];
-          
-        }
+
+  for (int i=1; i< n; i++) {
+
+    if (LogicalVector::is_na(y[i])) {
+
+      // find indices (before)
+      int bi = n+1;
+      int mx = x[i]-z;
+      for (int j=i; j > -1; --j) {if((LogicalVector::is_na(y[j]) == 0) & (bi > n) & (x[j] > mx)) {bi = j;}}
+
+      // find indices (after)
+      int ai = n+1;
+      mx = x[i]+z;
+      for (int j=i+1; j < n; j++) {if((LogicalVector::is_na(y[j]) == 0) & (ai > n) & (x[j] > mx)) {ai = j;}}
+
+      if ((bi < n) & (ai < n)) {
+
+        double a = 0;
+        double b = 0;
+
+        double xsum = x[bi] + x[ai];
+        double x2sum = pow(x[bi],2) + pow(x[ai],2);
+        double xsum2 = pow(xsum,2);
+        double ysum = y[bi] + y[ai];
+        double xysum = xsum * ysum;
+
+        a = (ysum*x2sum - xsum*ysum) / (n*x2sum-xsum2);
+        b = (n*xysum-(xsum*ysum)) / (n*x2sum-xsum2);
+
+        v[i] = b + a * x[i];
       }
     }
   }
-  
+
   return v;
 
 }
+
+// You can include R code blocks in C++ files processed with sourceCpp
+// (useful for testing and development). The R code will be automatically
+// run after the compilation.
+//
+
+/*** R
+intime(c(1,2,2,3,4,5), c(2,10,NA,11,5), 1)
+  */
 ```
